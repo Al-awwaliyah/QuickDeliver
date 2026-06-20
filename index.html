@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickDeliver - Fast Delivery Service</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <!-- Landing/Explore Page -->
+    <div class="page active" id="landingPage">
+        <div class="landing-page">
+            <nav class="landing-nav">
+                <div class="landing-logo">🚀 QuickDeliver</div>
+                <div class="landing-nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#about">About</a>
+                    <a href="#" onclick="showPage('authPage')">Login</a>
+                </div>
+            </nav>
+
+            <div class="landing-hero">
+                <h1>Order Anything in Offa</h1>
+                <p>From Nigerian food to groceries to electronics - delivered fast to your doorstep</p>
+                <div class="hero-buttons">
+                    <button class="btn-hero btn-hero-primary" onclick="showPage('authPage')">Get Started</button>
+                    <button class="btn-hero btn-hero-secondary" onclick="scrollToFeatures()">Learn More</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="features-section" id="features">
+            <div class="container">
+                <h2 class="section-title">Why Choose QuickDeliver?</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🍲</div>
+                        <h3>Local Nigerian Food</h3>
+                        <p>Order authentic Nigerian dishes from Delight Restaurant, Mama Put, and local favorites in Offa.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Fast Delivery</h3>
+                        <p>Get your orders delivered within 15-45 minutes for food and same-day for other products.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🛒</div>
+                        <h3>Wide Selection</h3>
+                        <p>Browse food, groceries, electronics, fashion, and pharmacy products all in one place.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💳</div>
+                        <h3>Flexible Payment</h3>
+                        <p>Pay with cash on delivery, bank transfer, card, USSD, or POS - your choice!</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📍</div>
+                        <h3>Local Businesses</h3>
+                        <p>Support Offa and Kwara State businesses - from Virem Stores to F&S Textiles.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⭐</div>
+                        <h3>Trusted Service</h3>
+                        <p>Rated by local customers with transparent reviews and reliable delivery tracking.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to Start Ordering?</h2>
+                <p>Join hundreds of satisfied customers in Offa, Kwara State</p>
+                <button class="btn-hero btn-hero-primary" onclick="showPage('authPage')">Create Your Account</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Authentication Page -->
+    <div class="page" id="authPage">
+        <div class="auth-page">
+            <div class="auth-container">
+                <div class="auth-sidebar">
+                    <div class="landing-logo" style="margin-bottom: 2rem;">🚀 QuickDeliver</div>
+                    <h2>Welcome to QuickDeliver</h2>
+                    <p>Order from the best restaurants and stores in Offa, Kwara State. Fast delivery, secure payments, and great local products.</p>
+                    <p style="margin-top: 1rem;">Join our community of happy customers today!</p>
+                </div>
+
+                <div class="auth-form-container">
+                    <a href="#" class="back-link" onclick="showPage('landingPage')">← Back to Home</a>
+
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                        <button class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+                        <h2 style="margin-bottom: 1.5rem;">Login to Your Account</h2>
+                        
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        </div>
+
+                        <button type="submit" class="btn-auth">Login</button>
+
+                        <div class="auth-footer">
+                            Don't have an account? <a href="#" onclick="switchAuthTab('signup')">Sign up</a>
+                        </div>
+                    </form>
+
+                    <!-- Signup Form -->
+                    <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
+                        <h2 style="margin-bottom: 1.5rem;">Create Your Account</h2>
+                        
+                        <div class="form-group">
+                            <label for="signupName">Full Name</label>
+                            <input type="text" id="signupName" placeholder="John Doe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupEmail">Email Address</label>
+                            <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupPhone">Phone Number</label>
+                            <input type="tel" id="signupPhone" placeholder="080XXXXXXXX" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupAddress">Delivery Address</label>
+                            <input type="text" id="signupAddress" placeholder="Your address in Offa" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <input type="password" id="signupPassword" placeholder="Create a password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupConfirmPassword">Confirm Password</label>
+                            <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                        </div>
+
+                        <button type="submit" class="btn-auth">Create Account</button>
+
+                        <div class="auth-footer">
+                            Already have an account? <a href="#" onclick="switchAuthTab('login')">Login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div class="page" id="dashboardPage">
+        <div class="dashboard-page">
+            <nav class="dashboard-nav">
+                <div class="dashboard-logo">🚀 QuickDeliver</div>
+                <div class="dashboard-user">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span id="userName">User</span>
+                    <button class="btn-logout" onclick="handleLogout()">Logout</button>
+                </div>
+            </nav>
+
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <h1>Welcome back, <span id="dashboardUserName">User</span>! 👋</h1>
+                    <p>Manage your orders and explore products in Offa</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-value" id="pendingOrders">0</div>
+                        <div class="stat-label">Pending Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="completedOrders">0</div>
+                        <div class="stat-label">Completed Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-value" id="totalSpent">₦0</div>
+                        <div class="stat-label">Total Spent</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Quick Actions</h2>
+                        <button class="btn-browse" onclick="showPage('browsePage')">Browse All Products</button>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="action-card" onclick="showPage('browsePage')">
+                            <div class="action-icon">🍲</div>
+                            <h3>Order Food</h3>
+                            <p>Nigerian dishes & fast food</p>
+                        </div>
+                        <div class="action-card" onclick="showPage('browsePage')">
+                            <div class="action-icon">🛒</div>
+                            <h3>Groceries</h3>
+                            <p>Fresh from Offa Market</p>
+                        </div>
+                        <div class="action-card" onclick="showPage('browsePage')">
+                            <div class="action-icon">📱</div>
+                            <h3>Electronics</h3>
+                            <p>Phones & accessories</p>
+                        </div>
+                        <div class="action-card" onclick="showPage('browsePage')">
+                            <div class="action-icon">💊</div>
+                            <h3>Pharmacy</h3>
+                            <p>Health & wellness</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Recent Orders</h2>
+                    </div>
+
+                    <div class="recent-orders" id="recentOrdersList">
+                        <div class="empty-state">
+                            <div class="empty-icon">📦</div>
+                            <p>No orders yet. Start browsing products!</p>
+                            <button class="btn-browse" onclick="showPage('browsePage')" style="margin-top: 1rem;">Browse Products</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Browse/Shopping Page -->
+    <div class="page" id="browsePage">
+        <header>
+            <nav>
+                <div class="logo">🚀 QuickDeliver</div>
+                <div class="nav-links">
+                    <a href="#" onclick="showPage('dashboardPage')">Dashboard</a>
+                    <a href="#categories">Categories</a>
+                    <a href="#products">Products</a>
+                </div>
+                <button class="cart-btn" onclick="toggleCart()">
+                    🛒 Cart
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <h1>Order Food & Goods in Offa, Kwara State</h1>
+            <p>From Nigerian food to groceries to electronics - delivered to your doorstep fast</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for jollof rice, amala, groceries..." id="searchInput">
+                <button onclick="searchProducts()">Search</button>
+            </div>
+        </section>
+
+        <section class="categories" id="categories">
+            <h2>Shop by Category</h2>
+            <div class="category-grid" id="categoryGrid"></div>
+        </section>
+
+        <section class="products" id="products">
+            <h2>Popular Items Near You</h2>
+            <div class="product-grid" id="productGrid"></div>
+        </section>
+
+        <!-- Cart Sidebar -->
+        <div class="cart-sidebar" id="cartSidebar">
+            <div class="cart-header">
+                <h2>Your Cart</h2>
+                <button class="close-cart" onclick="toggleCart()">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cartTotal">₦0</span>
+                </div>
+                <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
+            </div>
+        </div>
+
+        <!-- Checkout Modal -->
+        <div class="modal" id="checkoutModal">
+            <div class="modal-content">
+                <div id="checkoutForm">
+                    <div class="modal-header">
+                        <h2>Checkout</h2>
+                        <p>Complete your order details</p>
+                    </div>
+
+                    <form onsubmit="submitOrder(event)">
+                        <div class="form-section">
+                            <h3>Delivery Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name *</label>
+                                    <input type="text" id="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name *</label>
+                                    <input type="text" id="lastName" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" id="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone *</label>
+                                    <input type="tel" id="phone" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Delivery Address *</label>
+                                <textarea id="address" rows="3" required></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="city">City *</label>
+                                    <input type="text" id="city" value="Offa" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="state">State *</label>
+                                    <input type="text" id="state" value="Kwara" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Delivery Options</h3>
+                            <div class="form-group">
+                                <label for="deliveryTime">Preferred Delivery Time</label>
+                                <select id="deliveryTime">
+                                    <option value="standard">Standard (45-60 mins) - Free</option>
+                                    <option value="express">Express (30 mins) - ₦500</option>
+                                    <option value="same-day">Priority (15 mins) - ₦1000</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="specialInstructions">Special Instructions</label>
+                                <textarea id="specialInstructions" rows="2" placeholder="Leave at door, ring doorbell, etc."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Payment Method</h3>
+                            <div class="form-group">
+                                <label for="paymentMethod">Select Payment</label>
+                                <select id="paymentMethod">
+                                    <option value="cod">Cash on Delivery</option>
+                                    <option value="transfer">Bank Transfer</option>
+                                    <option value="card">Debit/Credit Card</option>
+                                    <option value="ussd">USSD Payment</option>
+                                    <option value="pos">POS on Delivery</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="order-summary">
+                            <h3>Order Summary</h3>
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="summarySubtotal">₦0</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Delivery Fee:</span>
+                                <span id="summaryDelivery">₦0</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span id="summaryTotal">₦0</span>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-cancel" onclick="closeCheckout()">Cancel</button>
+                            <button type="submit" class="btn btn-submit">Place Order</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="successMessage" style="display: none;">
+                    <div class="success-message">
+                        <div class="success-icon">✅</div>
+                        <h2>Order Placed Successfully!</h2>
+                        <p>Thank you for your order</p>
+                        <div class="order-number">Order #<span id="orderNumber"></span></div>
+                        <p>You will receive a confirmation SMS shortly.</p>
+                        <button class="btn btn-submit" onclick="closeSuccessMessage()">Continue Shopping</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>
