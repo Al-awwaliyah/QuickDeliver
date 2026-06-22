@@ -1,12 +1,33 @@
  // Supabase Configuration
-        const SUPABASE_URL = 'https://ehmghijjhelxbovpblii.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVobWdoaWpqaGVseGJvdnBibGlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTM0NjksImV4cCI6MjA5MzIyOTQ2OX0.NvMSVf75keCM4KqE-Zhgu_-D3AJgEGD_CSMyGB07hNA';
-        
-        // Initialize Supabase client
-        const { createClient } = supabase;
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // Data
+        // ---------------------------------------------------------------
+        const SUPABASE_URL = 'https://thdbbhwaqxbcjxqaysgg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoZGJiaHdhcXhiY2p4cWF5c2dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1Mjk3MDgsImV4cCI6MjA3OTEwNTcwOH0.SR-Xur_HJc3Nq1m7mkZYYiWNbVpyi8YcIw7fMgISoS0';
+
+        // Guard against the Supabase CDN script failing/being blocked.
+        // Previously this line threw immediately and killed everything that
+        // ran after it at the top level of the script.
+        let supabaseClient = null;
+        try {
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else {
+                console.error('Supabase library did not load. Auth/orders features will not work until this is fixed.');
+            }
+        } catch (err) {
+            console.error('Failed to initialize Supabase client:', err);
+        }
+
+        function requireSupabase() {
+            if (!supabaseClient) {
+                showNotification('Service temporarily unavailable. Please refresh and try again.', true);
+                return false;
+            }
+            return true;
+        }
+
+        // ---------------------------------------------------------------
+        // Static data
+        // ---------------------------------------------------------------
         const categories = [
             { id: 1, name: 'Local Restaurants', icon: '🍲' },
             { id: 2, name: 'Fast Food', icon: '🍗' },
@@ -19,129 +40,39 @@
         ];
 
         const products = [
-            // Local Restaurants - Offa & Kwara
             { id: 1, name: 'Jollof Rice & Chicken', category: 1, price: 2500, icon: '🍚', desc: 'Classic Nigerian Jollof with fried chicken', rating: 4.8, deliveryTime: '25-35 min', restaurant: 'Delight Restaurant Offa' },
             { id: 2, name: 'Amala & Abula', category: 1, price: 1800, icon: '🍲', desc: 'Yam flour with Gbegiri & Ewedu soup', rating: 4.9, deliveryTime: '30-40 min', restaurant: 'Delight Restaurant Offa' },
             { id: 3, name: 'Pounded Yam & Egusi', category: 1, price: 2200, icon: '🥘', desc: 'Fresh pounded yam with egusi soup', rating: 4.7, deliveryTime: '35-45 min', restaurant: 'Iya Alata Offa' },
             { id: 4, name: 'Fried Rice Combo', category: 1, price: 2800, icon: '🍱', desc: 'Fried rice with chicken & plantain', rating: 4.6, deliveryTime: '30-40 min', restaurant: 'Delight Restaurant Offa' },
-            
-            // Fast Food & Snacks
             { id: 5, name: 'Suya (Stick)', category: 2, price: 1500, icon: '🍖', desc: 'Spicy grilled beef suya', rating: 4.8, deliveryTime: '20-30 min', restaurant: 'Mallam Suya Spot' },
             { id: 6, name: 'Akara & Bread', category: 2, price: 800, icon: '🍞', desc: 'Bean cakes with bread', rating: 4.5, deliveryTime: '15-20 min', restaurant: 'Mama Akara' },
             { id: 7, name: 'Fried Chicken', category: 2, price: 1500, icon: '🍗', desc: '3 pieces spicy fried chicken', rating: 4.6, deliveryTime: '20-30 min', restaurant: 'Tasty Fried Chicken' },
-            { id: 8, name: 'Small Chops', category: 2, price: 3000, icon: '🥘', desc: 'Puff puff, spring rolls, samosa', rating: 4.7, deliveryTime: '25-35 min', restaurant: 'Small Chops Palace' },
-            
-            // Bakery & Snacks
-            { id: 9, name: 'Meat Pie', category: 3, price: 500, icon: '🥧', desc: 'Nigerian style meat pie', rating: 4.4, deliveryTime: '15-20 min', restaurant: 'Delight Bakery' },
-            { id: 10, name: 'Chin Chin (Pack)', category: 3, price: 800, icon: '🍪', desc: 'Crunchy fried pastry snack', rating: 4.6, deliveryTime: '10-15 min', restaurant: 'Delight by Ire' },
-            { id: 11, name: 'Puff Puff (12pcs)', category: 3, price: 500, icon: '🍩', desc: 'Sweet fried dough balls', rating: 4.5, deliveryTime: '15-20 min', restaurant: 'Offa Bakery' },
-            { id: 12, name: 'Sausage Roll', category: 3, price: 600, icon: '🌭', desc: 'Fresh baked sausage roll', rating: 4.4, deliveryTime: '15-20 min', restaurant: 'Delight Bakery' },
-            
-            // Nigerian Dishes & Swallow
-            { id: 13, name: 'Eba & Okro Soup', category: 4, price: 1500, icon: '🍲', desc: 'Garri with fresh okra soup', rating: 4.8, deliveryTime: '25-35 min', restaurant: 'Mama Put Offa' },
-            { id: 14, name: 'Fufu & Egusi', category: 4, price: 2000, icon: '🥣', desc: 'Cassava fufu with egusi soup', rating: 4.9, deliveryTime: '30-40 min', restaurant: 'Iya Yusuf Kitchen' },
-            { id: 15, name: 'White Rice & Stew', category: 4, price: 1200, icon: '🍚', desc: 'Steamed rice with tomato stew', rating: 4.7, deliveryTime: '20-30 min', restaurant: 'Mama Put Offa' },
-            { id: 16, name: 'Beans & Plantain', category: 4, price: 1000, icon: '🍛', desc: 'Fried beans with ripe plantain', rating: 4.6, deliveryTime: '25-30 min', restaurant: 'Ewa Agoyin Spot' },
-            
-            // Groceries - Offa Market & Stores
-            { id: 17, name: 'Rice (50kg bag)', category: 5, price: 85000, icon: '🌾', desc: 'Royal Stallion rice', rating: 4.5, deliveryTime: '1-2 hours', restaurant: 'Virem Stores Offa' },
-            { id: 18, name: 'Garri (5kg)', category: 5, price: 3500, icon: '🥣', desc: 'Premium white garri', rating: 4.6, deliveryTime: '45-60 min', restaurant: 'Offa Market' },
-            { id: 19, name: 'Palm Oil (4L)', category: 5, price: 8000, icon: '🛢️', desc: 'Fresh red palm oil', rating: 4.7, deliveryTime: '45-60 min', restaurant: 'Offa Market' },
-            { id: 20, name: 'Tomatoes (Basket)', category: 5, price: 6000, icon: '🍅', desc: 'Fresh tomatoes', rating: 4.4, deliveryTime: '45-60 min', restaurant: 'Offa Market' },
-            { id: 21, name: 'Yam Tuber', category: 5, price: 4000, icon: '🍠', desc: 'Medium size yam', rating: 4.5, deliveryTime: '45-60 min', restaurant: 'Offa Market' },
-            { id: 22, name: 'Frozen Chicken', category: 5, price: 9600, icon: '🍗', desc: '2kg whole chicken', rating: 4.6, deliveryTime: '1-2 hours', restaurant: 'Virem Stores Offa' },
-            
-            // Electronics - Available in Kwara
-            { id: 23, name: 'Tecno Smartphone', category: 6, price: 95000, icon: '📱', desc: 'Tecno Spark 10 Pro', rating: 4.7, deliveryTime: '2-3 hours', restaurant: 'Slot Ilorin' },
-            { id: 24, name: 'Infinix Phone', category: 6, price: 78000, icon: '📱', desc: 'Infinix Hot 40i', rating: 4.6, deliveryTime: '2-3 hours', restaurant: 'Slot Ilorin' },
-            { id: 25, name: 'Oraimo Earbuds', category: 6, price: 12000, icon: '🎧', desc: 'FreePods 4 wireless', rating: 4.8, deliveryTime: '2-3 hours', restaurant: 'Phone Accessories' },
-            { id: 26, name: 'Power Bank 20000mAh', category: 6, price: 15000, icon: '🔋', desc: 'Oraimo power bank', rating: 4.7, deliveryTime: '2-3 hours', restaurant: 'Phone Accessories' },
-            { id: 27, name: 'Phone Charger', category: 6, price: 3500, icon: '🔌', desc: 'Fast charging adapter', rating: 4.5, deliveryTime: '2-3 hours', restaurant: 'Phone Accessories' },
-            
-            // Fashion - Kwara/Offa Stores
-            { id: 28, name: 'Ankara Fabric (6yds)', category: 7, price: 6000, icon: '👗', desc: 'Premium ankara print', rating: 4.5, deliveryTime: '1-2 days', restaurant: 'F&S Textile Offa' },
-            { id: 29, name: 'Senator Material', category: 7, price: 8000, icon: '👔', desc: '5 yards senator fabric', rating: 4.6, deliveryTime: '1-2 days', restaurant: 'Raph Fashion' },
-            { id: 30, name: 'Sneakers', category: 7, price: 15000, icon: '👟', desc: 'Quality sports shoes', rating: 4.4, deliveryTime: '1-2 days', restaurant: 'Shoe Plaza Ilorin' },
-            { id: 31, name: 'Agbada Set', category: 7, price: 35000, icon: '🤵', desc: 'Complete native attire', rating: 4.7, deliveryTime: '2-3 days', restaurant: 'Native Wear Boutique' },
-            { id: 32, name: 'Baby Clothes Set', category: 7, price: 8500, icon: '👶', desc: '5 pieces baby wear', rating: 4.6, deliveryTime: '1-2 days', restaurant: 'Divine Grace Kiddies' },
-            
-            // Pharmacy & Healthcare
-            { id: 33, name: 'Paracetamol', category: 8, price: 500, icon: '💊', desc: 'Pain & fever relief', rating: 4.8, deliveryTime: '30-45 min', restaurant: 'HealthPlus Pharmacy' },
-            { id: 34, name: 'Multivitamins', category: 8, price: 4500, icon: '💊', desc: 'Daily vitamin supplement', rating: 4.6, deliveryTime: '30-45 min', restaurant: 'MedPlus Pharmacy' },
-            { id: 35, name: 'Hand Sanitizer', category: 8, price: 1500, icon: '🧴', desc: '500ml antibacterial gel', rating: 4.7, deliveryTime: '30-45 min', restaurant: 'City Pharmacy' },
-            { id: 36, name: 'Face Mask (50pcs)', category: 8, price: 3000, icon: '😷', desc: 'Disposable face masks', rating: 4.5, deliveryTime: '30-45 min', restaurant: 'MedCare Pharmacy' }
+            { id: 8, name: 'Small Chops', category: 2, price: 3000, icon: '🥘', desc: 'Puff puff, spring rolls, samosa', rating: 4.7, deliveryTime: '25-35 min', restaurant: 'Small Chops Palace' }
         ];
 
         let cart = [];
         let selectedCategory = null;
         let currentUser = null;
         let userOrders = [];
+        let userRole = null;
 
-        // Initialize app on load
-        async function initApp() {
-            // Check if user is already logged in
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            if (user) {
-                currentUser = user;
-                await loadUserData();
-            }
-            
-            // Listen for auth state changes
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_IN') {
-                    currentUser = session.user;
-                    loadUserData();
-                } else if (event === 'SIGNED_OUT') {
-                    currentUser = null;
-                    cart = [];
-                    userOrders = [];
-                }
-            });
-        }
-
-        // Load user data from database
-        async function loadUserData() {
-            if (!currentUser) return;
-            
-            // Load user profile
-            const { data: profile } = await supabaseClient
-                .from('profiles')
-                .select('*')
-                .eq('id', currentUser.id)
-                .single();
-            
-            if (profile) {
-                currentUser.profile = profile;
-            }
-            
-            // Load user orders
-            await loadUserOrders();
-        }
-
-        // Load user orders
-        async function loadUserOrders() {
-            if (!currentUser) return;
-            
-            const { data, error } = await supabaseClient
-                .from('orders')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .order('created_at', { ascending: false });
-            
-            if (data) {
-                userOrders = data;
-            }
-        }
-
-        // Page Navigation
+        // ---------------------------------------------------------------
+        // Page navigation
+        // ---------------------------------------------------------------
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            
+            const target = document.getElementById(pageId);
+            if (!target) return;
+            target.classList.add('active');
+
             if (pageId === 'browsePage') {
                 initBrowsePage();
             } else if (pageId === 'dashboardPage') {
                 initDashboard();
+            } else if (pageId === 'riderPage') {
+                initRiderDashboard();
+            } else if (pageId === 'adminPage') {
+                initAdminDashboard();
             }
         }
 
@@ -149,160 +80,253 @@
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Auth Functions
         function switchAuthTab(tab) {
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            
+
             if (tab === 'login') {
-                document.querySelectorAll('.auth-tab')[0].classList.add('active');
+                document.getElementById('loginTabBtn').classList.add('active');
                 document.getElementById('loginForm').classList.add('active');
             } else {
-                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+                document.getElementById('signupTabBtn').classList.add('active');
                 document.getElementById('signupForm').classList.add('active');
+            }
+        }
+
+        function updateRoleFields() {
+            const role = document.getElementById('signupRole').value;
+            const vehicleField = document.getElementById('vehicleField');
+            vehicleField.style.display = role === 'rider' ? 'block' : 'none';
+        }
+
+        // ---------------------------------------------------------------
+        // Auth / session
+        // ---------------------------------------------------------------
+        async function initApp() {
+            if (!requireSupabase()) return;
+
+            const { data } = await supabaseClient.auth.getUser();
+            const user = data && data.user;
+            if (user) {
+                currentUser = user;
+                await loadUserData();
+                await determineUserRole();
+            }
+
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN') {
+                    currentUser = session.user;
+                    loadUserData();
+                    determineUserRole();
+                } else if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                    userRole = null;
+                    cart = [];
+                    userOrders = [];
+                }
+            });
+        }
+
+        async function determineUserRole() {
+            if (!currentUser || !supabaseClient) return;
+
+            try {
+                const { data: profile } = await supabaseClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (profile) {
+                    userRole = profile.role || 'customer';
+
+                    if (userRole === 'admin') {
+                        showPage('adminPage');
+                    } else if (userRole === 'rider') {
+                        showPage('riderPage');
+                    } else {
+                        showPage('dashboardPage');
+                    }
+                }
+            } catch (error) {
+                console.error('Error determining role:', error);
+                userRole = 'customer';
+            }
+        }
+
+        async function loadUserData() {
+            if (!currentUser || !supabaseClient) return;
+
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (profile) {
+                currentUser.profile = profile;
+            }
+
+            await loadUserOrders();
+        }
+
+        async function loadUserOrders() {
+            if (!currentUser || !supabaseClient) return;
+
+            const { data } = await supabaseClient
+                .from('orders')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            if (data) {
+                userOrders = data;
             }
         }
 
         async function handleLogin(e) {
             e.preventDefault();
+            if (!requireSupabase()) return;
+
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            
+
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
-                
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error) throw error;
-                
+
                 currentUser = data.user;
                 await loadUserData();
                 showNotification('Login successful! Welcome back.');
-                setTimeout(() => {
-                    showPage('dashboardPage');
-                }, 1000);
+                setTimeout(() => showPage('dashboardPage'), 1000);
             } catch (error) {
-                showNotification('Login failed: ' + error.message);
+                showNotification('Login failed: ' + error.message, true);
             }
         }
 
         async function handleSignup(e) {
             e.preventDefault();
+            if (!requireSupabase()) return;
+
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const phone = document.getElementById('signupPhone').value;
             const address = document.getElementById('signupAddress').value;
+            const role = document.getElementById('signupRole').value;
+            const vehicle = document.getElementById('signupVehicle').value;
             const password = document.getElementById('signupPassword').value;
             const confirmPassword = document.getElementById('signupConfirmPassword').value;
-            
+
             if (password !== confirmPassword) {
-                showNotification('Passwords do not match!');
+                showNotification('Passwords do not match!', true);
                 return;
             }
-            
+
+            if (!role) {
+                showNotification('Please select a role', true);
+                return;
+            }
+
             try {
-                // Sign up the user
                 const { data, error } = await supabaseClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: name,
-                            phone: phone,
-                            address: address
-                        }
-                    }
+                    email,
+                    password,
+                    options: { data: { full_name: name, phone, address, role } }
                 });
-                
+
                 if (error) throw error;
-                
-                // Create profile in profiles table
+
                 if (data.user) {
-                    const { error: profileError } = await supabaseClient
-                        .from('profiles')
-                        .insert([
-                            {
-                                id: data.user.id,
-                                full_name: name,
-                                email: email,
-                                phone: phone,
-                                address: address
-                            }
-                        ]);
-                    
-                    if (profileError) console.error('Profile creation error:', profileError);
+                    const profileData = {
+                        id: data.user.id,
+                        full_name: name,
+                        email,
+                        phone,
+                        address,
+                        role,
+                        vehicle_type: role === 'rider' ? vehicle : null,
+                        status: 'active'
+                    };
+
+                    const { error: profileError } = await supabaseClient.from('profiles').insert([profileData]);
+                    if (profileError) console.error('Profile error:', profileError);
+
+                    if (role === 'rider') {
+                        await supabaseClient.from('rider_earnings').insert([{
+                            rider_id: data.user.id,
+                            total_earnings: 0,
+                            total_deliveries: 0
+                        }]);
+                    }
                 }
-                
+
                 currentUser = data.user;
-                showNotification('Account created successfully! Please check your email for verification.');
-                setTimeout(() => {
-                    showPage('dashboardPage');
-                }, 2000);
+                userRole = role;
+                showNotification('Account created successfully!');
+                setTimeout(() => showPage(role === 'rider' ? 'riderPage' : 'dashboardPage'), 2000);
             } catch (error) {
-                showNotification('Signup failed: ' + error.message);
+                showNotification('Signup failed: ' + error.message, true);
             }
         }
 
         async function handleLogout() {
+            if (!requireSupabase()) return;
+
             try {
                 const { error } = await supabaseClient.auth.signOut();
                 if (error) throw error;
-                
+
                 currentUser = null;
                 cart = [];
                 userOrders = [];
                 updateCartUI();
                 showNotification('Logged out successfully.');
-                setTimeout(() => {
-                    showPage('landingPage');
-                }, 1000);
+                setTimeout(() => showPage('landingPage'), 1000);
             } catch (error) {
-                showNotification('Logout failed: ' + error.message);
+                showNotification('Logout failed: ' + error.message, true);
             }
         }
 
-        // Dashboard Functions
+        // ---------------------------------------------------------------
+        // Customer dashboard
+        // ---------------------------------------------------------------
         async function initDashboard() {
             if (!currentUser) {
                 showPage('authPage');
                 return;
             }
-            
+
             const firstName = (currentUser.user_metadata?.full_name || currentUser.email).split(' ')[0];
             document.getElementById('userName').textContent = firstName;
             document.getElementById('dashboardUserName').textContent = firstName;
             document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
-            
-            // Load orders from database
+
             await loadUserOrders();
-            
-            // Update stats
+
             document.getElementById('totalOrders').textContent = userOrders.length;
             document.getElementById('pendingOrders').textContent = userOrders.filter(o => o.status === 'pending').length;
             document.getElementById('completedOrders').textContent = userOrders.filter(o => o.status === 'completed').length;
-            
+
             const totalSpent = userOrders.reduce((sum, order) => sum + parseFloat(order.total || 0), 0);
             document.getElementById('totalSpent').textContent = `₦${totalSpent.toLocaleString()}`;
-            
-            // Display recent orders
+
             displayRecentOrders();
         }
 
         function displayRecentOrders() {
             const ordersList = document.getElementById('recentOrdersList');
-            
+
             if (userOrders.length === 0) {
                 ordersList.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">📦</div>
                         <p>No orders yet. Start browsing products!</p>
-                        <button class="btn-browse" onclick="showPage('browsePage')" style="margin-top: 1rem;">Browse Products</button>
+                        <button class="btn-browse" data-goto="browsePage" style="margin-top: 1rem;">Browse Products</button>
                     </div>
                 `;
                 return;
             }
-            
+
             ordersList.innerHTML = userOrders.slice(0, 5).map(order => `
                 <div class="order-item">
                     <div class="order-info">
@@ -314,7 +338,9 @@
             `).join('');
         }
 
-        // Browse Page Functions
+        // ---------------------------------------------------------------
+        // Browse / shopping
+        // ---------------------------------------------------------------
         function initBrowsePage() {
             renderCategories();
             renderProducts(products);
@@ -324,7 +350,7 @@
         function renderCategories() {
             const grid = document.getElementById('categoryGrid');
             grid.innerHTML = categories.map(cat => `
-                <div class="category-card" onclick="filterByCategory(${cat.id})">
+                <div class="category-card" data-category-id="${cat.id}">
                     <div class="category-icon">${cat.icon}</div>
                     <div>${cat.name}</div>
                 </div>
@@ -353,27 +379,26 @@
                         </div>
                         <div class="product-footer">
                             <div class="product-price">₦${product.price.toLocaleString()}</div>
-                            <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                            <button class="add-to-cart" data-product-id="${product.id}">Add to Cart</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function filterByCategory(categoryId, event) {
-            const cards = document.querySelectorAll('.category-card');
-            cards.forEach(card => card.classList.remove('active'));
-            event.target.closest('.category-card').classList.add('active');
-            
+        function filterByCategory(categoryId) {
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.toggle('active', Number(card.dataset.categoryId) === categoryId);
+            });
+
             selectedCategory = categoryId;
-            const filtered = products.filter(p => p.category === categoryId);
-            renderProducts(filtered);
+            renderProducts(products.filter(p => p.category === categoryId));
         }
 
         function searchProducts() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = products.filter(p => 
-                p.name.toLowerCase().includes(query) || 
+            const filtered = products.filter(p =>
+                p.name.toLowerCase().includes(query) ||
                 p.desc.toLowerCase().includes(query)
             );
             renderProducts(filtered);
@@ -381,14 +406,15 @@
 
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
+            if (!product) return;
             const existingItem = cart.find(item => item.id === productId);
-            
+
             if (existingItem) {
                 existingItem.quantity++;
             } else {
                 cart.push({ ...product, quantity: 1 });
             }
-            
+
             updateCartUI();
             showNotification(`${product.name} added to cart!`);
         }
@@ -396,9 +422,9 @@
         function updateCartUI() {
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             document.getElementById('cartCount').textContent = count;
-            
+
             const cartItemsContainer = document.getElementById('cartItems');
-            
+
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = `
                     <div class="empty-cart">
@@ -414,16 +440,16 @@
                             <div class="cart-item-name">${item.name}</div>
                             <div class="cart-item-price">₦${item.price.toLocaleString()}</div>
                             <div class="cart-item-controls">
-                                <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                                <button class="qty-btn" data-qty-action="dec" data-id="${item.id}">-</button>
                                 <span>${item.quantity}</span>
-                                <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                                <button class="qty-btn" data-qty-action="inc" data-id="${item.id}">+</button>
                             </div>
                         </div>
-                        <button class="remove-btn" onclick="removeFromCart(${item.id})">×</button>
+                        <button class="remove-btn" data-remove-id="${item.id}">×</button>
                     </div>
                 `).join('');
             }
-            
+
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             document.getElementById('cartTotal').textContent = `₦${total.toLocaleString()}`;
         }
@@ -452,18 +478,18 @@
 
         function openCheckout() {
             if (cart.length === 0) {
-                showNotification('Your cart is empty!');
+                showNotification('Your cart is empty!', true);
                 return;
             }
-            
+
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const deliveryFee = 0;
             const total = subtotal + deliveryFee;
-            
+
             document.getElementById('summarySubtotal').textContent = `₦${subtotal.toLocaleString()}`;
             document.getElementById('summaryDelivery').textContent = `₦${deliveryFee.toLocaleString()}`;
             document.getElementById('summaryTotal').textContent = `₦${total.toLocaleString()}`;
-            
+
             document.getElementById('checkoutModal').classList.add('active');
             document.getElementById('cartSidebar').classList.remove('open');
         }
@@ -472,22 +498,26 @@
             document.getElementById('checkoutModal').classList.remove('active');
         }
 
-        document.getElementById('deliveryTime')?.addEventListener('change', function() {
+        function updateDeliveryFeeDisplay() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliverySelect = document.getElementById('deliveryTime');
             let deliveryFee = 0;
-            
-            if (this.value === 'express') deliveryFee = 500;
-            if (this.value === 'same-day') deliveryFee = 1000;
-            
+            if (deliverySelect.value === 'express') deliveryFee = 500;
+            if (deliverySelect.value === 'same-day') deliveryFee = 1000;
+
             const total = subtotal + deliveryFee;
-            
             document.getElementById('summaryDelivery').textContent = `₦${deliveryFee.toLocaleString()}`;
             document.getElementById('summaryTotal').textContent = `₦${total.toLocaleString()}`;
-        });
+        }
 
-        function submitOrder(event) {
+        async function submitOrder(event) {
             event.preventDefault();
-            
+            if (!requireSupabase()) return;
+            if (!currentUser) {
+                showNotification('Please log in before placing an order.', true);
+                return;
+            }
+
             const orderNumber = Math.floor(100000 + Math.random() * 900000);
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const deliverySelect = document.getElementById('deliveryTime');
@@ -495,16 +525,15 @@
             if (deliverySelect.value === 'express') deliveryFee = 500;
             if (deliverySelect.value === 'same-day') deliveryFee = 1000;
             const total = subtotal + deliveryFee;
-            
-            // Collect form data
+
             const orderData = {
                 user_id: currentUser.id,
                 order_number: orderNumber,
                 items: JSON.stringify(cart),
                 items_count: cart.length,
-                subtotal: subtotal,
+                subtotal,
                 delivery_fee: deliveryFee,
-                total: total,
+                total,
                 status: 'pending',
                 delivery_address: document.getElementById('address').value,
                 delivery_city: document.getElementById('city').value,
@@ -516,34 +545,27 @@
                 payment_method: document.getElementById('paymentMethod').value,
                 special_instructions: document.getElementById('specialInstructions').value
             };
-            
-            // Save to Supabase
-            saveOrderToDatabase(orderData, orderNumber);
+
+            await saveOrderToDatabase(orderData, orderNumber);
         }
 
         async function saveOrderToDatabase(orderData, orderNumber) {
             try {
-                const { data, error } = await supabase
-                    .from('orders')
-                    .insert([orderData])
-                    .select();
-                
+                const { data, error } = await supabaseClient.from('orders').insert([orderData]).select();
                 if (error) throw error;
-                
-                // Update local orders
+
                 userOrders.unshift(data[0]);
-                
+
                 document.getElementById('orderNumber').textContent = orderNumber;
                 document.getElementById('checkoutForm').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
-                
-                // Reset cart
+
                 cart = [];
                 updateCartUI();
-                
+
                 showNotification('Order placed successfully!');
             } catch (error) {
-                showNotification('Error placing order: ' + error.message);
+                showNotification('Error placing order: ' + error.message, true);
                 console.error('Order error:', error);
             }
         }
@@ -552,28 +574,474 @@
             document.getElementById('checkoutModal').classList.remove('active');
             document.getElementById('checkoutForm').style.display = 'block';
             document.getElementById('successMessage').style.display = 'none';
-            document.querySelector('form').reset();
+            // Fixed: this used to call document.querySelector('form').reset(),
+            // which grabs the FIRST <form> in the whole document (could be the
+            // login form on another page) instead of the checkout form.
+            document.getElementById('checkoutOrderForm').reset();
             showPage('dashboardPage');
         }
 
-        function showNotification(message) {
+        // ---------------------------------------------------------------
+        // Rider dashboard
+        // ---------------------------------------------------------------
+        async function initRiderDashboard() {
+            if (!currentUser || userRole !== 'rider') {
+                showPage('authPage');
+                return;
+            }
+            if (!supabaseClient) return;
+
+            const firstName = (currentUser.user_metadata?.full_name || currentUser.email).split(' ')[0];
+            document.getElementById('riderName').textContent = firstName;
+            document.getElementById('riderAvatar').textContent = firstName.charAt(0).toUpperCase();
+
+            const { data: earnings } = await supabaseClient
+                .from('rider_earnings')
+                .select('*')
+                .eq('rider_id', currentUser.id)
+                .single();
+
+            if (earnings) {
+                document.getElementById('totalEarnings').textContent = `₦${earnings.total_earnings.toLocaleString()}`;
+                document.getElementById('totalDeliveries').textContent = earnings.total_deliveries;
+            }
+
+            await loadAvailableOrders();
+            await loadActiveDeliveries();
+        }
+
+        async function loadAvailableOrders() {
+            try {
+                const { data: orders } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .eq('status', 'pending')
+                    .limit(10);
+
+                const list = document.getElementById('availableOrdersList');
+                if (!orders || orders.length === 0) {
+                    list.innerHTML = '<p style="text-align: center; color: #999;">No available orders</p>';
+                    return;
+                }
+
+                list.innerHTML = orders.map(order => `
+                    <div class="order-item">
+                        <div class="order-info">
+                            <h4>Order #${order.order_number}</h4>
+                            <p>📍 ${order.delivery_address}, ${order.delivery_city}</p>
+                            <p>₦${parseFloat(order.total).toLocaleString()}</p>
+                        </div>
+                        <button class="btn-sm btn-update" data-accept-order="${order.id}">Accept Delivery</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        async function loadActiveDeliveries() {
+            try {
+                const { data: deliveries } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .eq('assigned_rider', currentUser.id)
+                    .neq('status', 'completed');
+
+                const list = document.getElementById('activeDeliveriesList');
+                const count = deliveries ? deliveries.length : 0;
+                document.getElementById('activeDeliveries').textContent = count;
+
+                if (!deliveries || deliveries.length === 0) {
+                    list.innerHTML = '<p style="text-align: center; color: #999;">No active deliveries</p>';
+                    return;
+                }
+
+                list.innerHTML = deliveries.map(delivery => `
+                    <div class="order-item">
+                        <div class="order-info">
+                            <h4>Order #${delivery.order_number}</h4>
+                            <p>📍 ${delivery.delivery_address}</p>
+                            <p>Status: <span style="color: var(--warning);">${delivery.status}</span></p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-sm btn-update" data-delivery-id="${delivery.id}" data-delivery-status="on_way">On Way</button>
+                            <button class="btn-sm btn-update" data-delivery-id="${delivery.id}" data-delivery-status="completed">Delivered</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading deliveries:', error);
+            }
+        }
+
+        async function acceptOrder(orderId) {
+            try {
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .update({ assigned_rider: currentUser.id, status: 'processing' })
+                    .eq('id', orderId);
+
+                if (error) throw error;
+
+                showNotification('Order accepted! Start delivery.');
+                await loadAvailableOrders();
+                await loadActiveDeliveries();
+            } catch (error) {
+                showNotification('Error accepting order: ' + error.message, true);
+            }
+        }
+
+        async function updateDeliveryStatus(orderId, newStatus) {
+            try {
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .update({ status: newStatus })
+                    .eq('id', orderId);
+
+                if (error) throw error;
+
+                showNotification('Delivery status updated!');
+                await loadActiveDeliveries();
+
+                if (newStatus === 'completed') {
+                    await updateRiderEarnings();
+                }
+            } catch (error) {
+                showNotification('Error updating status: ' + error.message, true);
+            }
+        }
+
+        async function updateRiderEarnings() {
+            try {
+                const { data: earnings } = await supabaseClient
+                    .from('rider_earnings')
+                    .select('*')
+                    .eq('rider_id', currentUser.id)
+                    .single();
+
+                if (earnings) {
+                    const newEarnings = earnings.total_earnings + 1500;
+                    const newDeliveries = earnings.total_deliveries + 1;
+
+                    await supabaseClient
+                        .from('rider_earnings')
+                        .update({ total_earnings: newEarnings, total_deliveries: newDeliveries })
+                        .eq('rider_id', currentUser.id);
+
+                    document.getElementById('totalEarnings').textContent = `₦${newEarnings.toLocaleString()}`;
+                    document.getElementById('totalDeliveries').textContent = newDeliveries;
+                }
+            } catch (error) {
+                console.error('Error updating earnings:', error);
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // Admin dashboard
+        // ---------------------------------------------------------------
+        async function initAdminDashboard() {
+            if (!currentUser || userRole !== 'admin') {
+                showPage('authPage');
+                return;
+            }
+            if (!supabaseClient) return;
+
+            const firstName = (currentUser.user_metadata?.full_name || currentUser.email).split(' ')[0];
+            document.getElementById('adminName').textContent = firstName;
+            document.getElementById('adminAvatar').textContent = firstName.charAt(0).toUpperCase();
+
+            const { data: users } = await supabaseClient.from('profiles').select('*').eq('role', 'customer');
+            const { data: riders } = await supabaseClient.from('profiles').select('*').eq('role', 'rider');
+            const { data: orders } = await supabaseClient.from('orders').select('*');
+
+            document.getElementById('totalUsers').textContent = users ? users.length : 0;
+            document.getElementById('totalRiders').textContent = riders ? riders.length : 0;
+            document.getElementById('adminTotalOrders').textContent = orders ? orders.length : 0;
+
+            const totalRev = orders ? orders.reduce((sum, o) => sum + parseFloat(o.total || 0), 0) : 0;
+            document.getElementById('totalRevenue').textContent = `₦${totalRev.toLocaleString()}`;
+        }
+
+        function showAdminSection(section) {
+            if (section === 'users') loadAdminUsers();
+            else if (section === 'riders') loadAdminRiders();
+            else if (section === 'orders') loadAdminOrders();
+            else if (section === 'payments') loadAdminPayments();
+        }
+
+        async function loadAdminUsers() {
+            try {
+                const { data: users } = await supabaseClient.from('profiles').select('*').eq('role', 'customer');
+                const content = document.getElementById('adminContent');
+                if (!users || users.length === 0) {
+                    content.innerHTML = '<p>No users found</p>';
+                    return;
+                }
+
+                content.innerHTML = `
+                    <h3>Customers (${users.length})</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: var(--light);">
+                            <th style="padding: 1rem; text-align: left;">Name</th>
+                            <th style="padding: 1rem; text-align: left;">Email</th>
+                            <th style="padding: 1rem; text-align: left;">Phone</th>
+                            <th style="padding: 1rem; text-align: left;">Status</th>
+                        </tr>
+                        ${users.map(u => `
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 1rem;">${u.full_name}</td>
+                                <td style="padding: 1rem;">${u.email}</td>
+                                <td style="padding: 1rem;">${u.phone}</td>
+                                <td style="padding: 1rem;">${u.status}</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                `;
+            } catch (error) {
+                document.getElementById('adminContent').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        async function loadAdminRiders() {
+            try {
+                const { data: riders } = await supabaseClient.from('profiles').select('*').eq('role', 'rider');
+                const content = document.getElementById('adminContent');
+                if (!riders || riders.length === 0) {
+                    content.innerHTML = '<p>No riders found</p>';
+                    return;
+                }
+
+                content.innerHTML = `
+                    <h3>Delivery Riders (${riders.length})</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: var(--light);">
+                            <th style="padding: 1rem; text-align: left;">Name</th>
+                            <th style="padding: 1rem; text-align: left;">Phone</th>
+                            <th style="padding: 1rem; text-align: left;">Vehicle</th>
+                            <th style="padding: 1rem; text-align: left;">Status</th>
+                        </tr>
+                        ${riders.map(r => `
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 1rem;">${r.full_name}</td>
+                                <td style="padding: 1rem;">${r.phone}</td>
+                                <td style="padding: 1rem;">${r.vehicle_type}</td>
+                                <td style="padding: 1rem;">${r.status}</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                `;
+            } catch (error) {
+                document.getElementById('adminContent').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        async function loadAdminOrders() {
+            try {
+                const { data: orders } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                const content = document.getElementById('adminContent');
+                if (!orders || orders.length === 0) {
+                    content.innerHTML = '<p>No orders found</p>';
+                    return;
+                }
+
+                content.innerHTML = `
+                    <h3>Recent Orders</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: var(--light);">
+                            <th style="padding: 1rem; text-align: left;">Order #</th>
+                            <th style="padding: 1rem; text-align: left;">Customer</th>
+                            <th style="padding: 1rem; text-align: left;">Amount</th>
+                            <th style="padding: 1rem; text-align: left;">Status</th>
+                        </tr>
+                        ${orders.map(o => `
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 1rem;">#${o.order_number}</td>
+                                <td style="padding: 1rem;">${o.customer_name}</td>
+                                <td style="padding: 1rem;">₦${parseFloat(o.total).toLocaleString()}</td>
+                                <td style="padding: 1rem;"><span style="background: var(--warning); padding: 0.3rem 0.8rem; border-radius: 10px; font-size: 0.85rem;">${o.status}</span></td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                `;
+            } catch (error) {
+                document.getElementById('adminContent').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        async function loadAdminPayments() {
+            try {
+                const { data: orders } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                const content = document.getElementById('adminContent');
+                const totalPayments = orders ? orders.reduce((sum, o) => sum + parseFloat(o.total || 0), 0) : 0;
+
+                content.innerHTML = `
+                    <h3>Payment Summary</h3>
+                    <div style="background: var(--light); padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+                        <p style="font-size: 2rem; font-weight: bold; color: var(--primary);">₦${totalPayments.toLocaleString()}</p>
+                        <p>Total Revenue</p>
+                    </div>
+                    <h3>Recent Payments</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: var(--light);">
+                            <th style="padding: 1rem; text-align: left;">Order #</th>
+                            <th style="padding: 1rem; text-align: left;">Amount</th>
+                            <th style="padding: 1rem; text-align: left;">Method</th>
+                            <th style="padding: 1rem; text-align: left;">Date</th>
+                        </tr>
+                        ${orders && orders.length > 0 ? orders.slice(0, 20).map(o => `
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 1rem;">#${o.order_number}</td>
+                                <td style="padding: 1rem;">₦${parseFloat(o.total).toLocaleString()}</td>
+                                <td style="padding: 1rem;">${o.payment_method}</td>
+                                <td style="padding: 1rem;">${new Date(o.created_at).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('') : '<tr><td colspan="4" style="padding: 1rem; text-align: center;">No payments</td></tr>'}
+                    </table>
+                `;
+            } catch (error) {
+                document.getElementById('adminContent').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // Notifications
+        // ---------------------------------------------------------------
+        function showNotification(message, isError) {
             const notification = document.getElementById('notification');
+            if (!notification) return; // defensive: never throw just because of a UI toast
             notification.textContent = message;
+            notification.classList.toggle('error', !!isError);
             notification.classList.add('show');
-            
-            setTimeout(() => {
+
+            clearTimeout(notification._hideTimer);
+            notification._hideTimer = setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
         }
 
-        const modal = document.getElementById('checkoutModal');
-        if (modal) {
-         modal.addEventListener('click', function(e) {
-         if (e.target === this) {
-            closeCheckout();
+        // ---------------------------------------------------------------
+        // Event wiring (all done via addEventListener / delegation instead
+        // of inline onclick="" attributes — this is the fix for "Get
+        // Started" and "Login" appearing to do nothing in environments
+        // that restrict inline event-handler attributes, e.g. via a
+        // Content-Security-Policy, sandboxed preview, or some browser
+        // extensions. addEventListener also keeps logic out of HTML strings
+        // and avoids relying on the implicit/global `event` object.)
+        // ---------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', wireUpEvents);
+        // In case the script runs after DOMContentLoaded already fired
+        // (e.g. script placed at end of body, which is the case here):
+        if (document.readyState !== 'loading') {
+            wireUpEvents();
         }
+
+        function wireUpEvents() {
+            // Landing page
+            document.getElementById('getStartedBtn')?.addEventListener('click', () => showPage('authPage'));
+            document.getElementById('ctaSignupBtn')?.addEventListener('click', () => showPage('authPage'));
+            document.getElementById('learnMoreBtn')?.addEventListener('click', scrollToFeatures);
+            document.getElementById('navLoginLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('authPage');
+            });
+
+            // Auth page
+            document.getElementById('authBackLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('landingPage');
+            });
+            document.getElementById('loginTabBtn')?.addEventListener('click', () => switchAuthTab('login'));
+            document.getElementById('signupTabBtn')?.addEventListener('click', () => switchAuthTab('signup'));
+            document.querySelectorAll('.auth-switch-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchAuthTab(link.dataset.tab);
+                });
+            });
+            document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
+            document.getElementById('signupForm')?.addEventListener('submit', handleSignup);
+            document.getElementById('signupRole')?.addEventListener('change', updateRoleFields);
+
+            // Logout buttons (dashboard / rider / admin)
+            document.getElementById('dashboardLogoutBtn')?.addEventListener('click', handleLogout);
+            document.getElementById('riderLogoutBtn')?.addEventListener('click', handleLogout);
+            document.getElementById('adminLogoutBtn')?.addEventListener('click', handleLogout);
+
+            // Generic "data-goto" navigation (dashboard quick actions, nav links, etc.)
+            document.body.addEventListener('click', (e) => {
+                const gotoEl = e.target.closest('[data-goto]');
+                if (gotoEl) {
+                    e.preventDefault();
+                    showPage(gotoEl.dataset.goto);
+                }
+            });
+
+            // Browse page
+            document.getElementById('openCartBtn')?.addEventListener('click', toggleCart);
+            document.getElementById('closeCartBtn')?.addEventListener('click', toggleCart);
+            document.getElementById('searchBtn')?.addEventListener('click', searchProducts);
+            document.getElementById('searchInput')?.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') searchProducts();
+            });
+            document.getElementById('checkoutBtn')?.addEventListener('click', openCheckout);
+            document.getElementById('checkoutCancelBtn')?.addEventListener('click', closeCheckout);
+            document.getElementById('continueShoppingBtn')?.addEventListener('click', closeSuccessMessage);
+            document.getElementById('checkoutOrderForm')?.addEventListener('submit', submitOrder);
+            document.getElementById('deliveryTime')?.addEventListener('change', updateDeliveryFeeDisplay);
+
+            document.getElementById('checkoutModal')?.addEventListener('click', function (e) {
+                if (e.target === this) closeCheckout();
+            });
+
+            // Category grid (delegated — content is rendered dynamically)
+            document.getElementById('categoryGrid')?.addEventListener('click', (e) => {
+                const card = e.target.closest('.category-card');
+                if (card) filterByCategory(Number(card.dataset.categoryId));
+            });
+
+            // Product grid (delegated)
+            document.getElementById('productGrid')?.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-product-id]');
+                if (btn) addToCart(Number(btn.dataset.productId));
+            });
+
+            // Cart items (delegated)
+            document.getElementById('cartItems')?.addEventListener('click', (e) => {
+                const qtyBtn = e.target.closest('[data-qty-action]');
+                if (qtyBtn) {
+                    const id = Number(qtyBtn.dataset.id);
+                    updateQuantity(id, qtyBtn.dataset.qtyAction === 'inc' ? 1 : -1);
+                    return;
+                }
+                const removeBtn = e.target.closest('[data-remove-id]');
+                if (removeBtn) removeFromCart(Number(removeBtn.dataset.removeId));
+            });
+
+            // Admin quick actions
+            document.getElementById('adminQuickActions')?.addEventListener('click', (e) => {
+                const card = e.target.closest('[data-section]');
+                if (card) showAdminSection(card.dataset.section);
+            });
+
+            // Rider: available orders / active deliveries (delegated)
+            document.getElementById('availableOrdersList')?.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-accept-order]');
+                if (btn) acceptOrder(Number(btn.dataset.acceptOrder));
+            });
+            document.getElementById('activeDeliveriesList')?.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-delivery-id]');
+                if (btn) updateDeliveryStatus(Number(btn.dataset.deliveryId), btn.dataset.deliveryStatus);
             });
         }
 
-        // Initialize
-        initApp(); 
+        // Initialize app
+        initApp();

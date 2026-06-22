@@ -20,7 +20,6 @@
             background: var(--light);
         }
 
-        /* Pages Container */
         .page {
             display: none;
         }
@@ -29,7 +28,6 @@
             display: block;
         }
 
-        /* Landing Page Styles */
         .landing-page {
             min-height: 100vh;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -57,6 +55,7 @@
             margin-left: 2rem;
             font-weight: 500;
             transition: opacity 0.3s;
+            cursor: pointer;
         }
 
         .landing-nav-links a:hover {
@@ -182,7 +181,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Auth Page Styles */
         .auth-page {
             min-height: 100vh;
             display: flex;
@@ -271,7 +269,8 @@
         }
 
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 0.9rem;
             border: 2px solid #e0e0e0;
@@ -281,7 +280,8 @@
         }
 
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
         }
@@ -314,6 +314,7 @@
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
+            cursor: pointer;
         }
 
         .back-link {
@@ -324,9 +325,9 @@
             gap: 0.5rem;
             margin-bottom: 2rem;
             font-weight: 600;
+            cursor: pointer;
         }
 
-        /* Dashboard Styles */
         .dashboard-page {
             min-height: 100vh;
             background: var(--light);
@@ -564,7 +565,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Header */
         header {
             background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -602,6 +602,7 @@
             color: var(--dark);
             font-weight: 500;
             transition: color 0.3s;
+            cursor: pointer;
         }
 
         .nav-links a:hover {
@@ -641,7 +642,6 @@
             font-weight: bold;
         }
 
-        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -689,7 +689,6 @@
             background: #1a1d1f;
         }
 
-        /* Categories */
         .categories {
             max-width: 1200px;
             margin: 3rem auto;
@@ -733,7 +732,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Products */
         .products {
             max-width: 1200px;
             margin: 3rem auto;
@@ -849,7 +847,6 @@
             transform: scale(1.05);
         }
 
-        /* Cart Sidebar */
         .cart-sidebar {
             position: fixed;
             right: -400px;
@@ -1003,7 +1000,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Checkout Modal */
         .modal {
             display: none;
             position: fixed;
@@ -1054,24 +1050,6 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-bottom: 1rem;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
         }
 
         .order-summary {
@@ -1129,7 +1107,6 @@
             transform: scale(1.02);
         }
 
-        /* Success Message */
         .success-message {
             text-align: center;
             padding: 2rem;
@@ -1167,12 +1144,15 @@
             z-index: 3000;
         }
 
+        .notification.error {
+            background: var(--primary);
+        }
+
         .notification.show {
             transform: translateY(0);
             opacity: 1;
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1184,7 +1164,6 @@
             }
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .landing-hero h1 {
                 font-size: 2.5rem;

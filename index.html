@@ -7,15 +7,15 @@
     <link rel="stylesheet" href="app.css">
 </head>
 <body>
-    <!-- Landing/Explore Page -->
+ <!-- Landing/Explore Page -->
     <div class="page active" id="landingPage">
         <div class="landing-page">
             <nav class="landing-nav">
                 <div class="landing-logo">🚀 QuickDeliver</div>
                 <div class="landing-nav-links">
-                    <a href="#features">Features</a>
+                    <a href="#features" id="featuresLink">Features</a>
                     <a href="#about">About</a>
-                    <a href="#" onclick="showPage('authPage')">Login</a>
+                    <a href="#" id="navLoginLink">Login</a>
                 </div>
             </nav>
 
@@ -23,8 +23,8 @@
                 <h1>Order Anything in Offa</h1>
                 <p>From Nigerian food to groceries to electronics - delivered fast to your doorstep</p>
                 <div class="hero-buttons">
-                    <button class="btn-hero btn-hero-primary" onclick="showPage('authPage')">Get Started</button>
-                    <button class="btn-hero btn-hero-secondary" onclick="scrollToFeatures()">Learn More</button>
+                    <button class="btn-hero btn-hero-primary" id="getStartedBtn">Get Started</button>
+                    <button class="btn-hero btn-hero-secondary" id="learnMoreBtn">Learn More</button>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
             <div class="container">
                 <h2>Ready to Start Ordering?</h2>
                 <p>Join hundreds of satisfied customers in Offa, Kwara State</p>
-                <button class="btn-hero btn-hero-primary" onclick="showPage('authPage')">Create Your Account</button>
+                <button class="btn-hero btn-hero-primary" id="ctaSignupBtn">Create Your Account</button>
             </div>
         </section>
     </div>
@@ -88,15 +88,15 @@
                 </div>
 
                 <div class="auth-form-container">
-                    <a href="#" class="back-link" onclick="showPage('landingPage')">← Back to Home</a>
+                    <a href="#" class="back-link" id="authBackLink">← Back to Home</a>
 
                     <div class="auth-tabs">
-                        <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
-                        <button class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+                        <button class="auth-tab active" id="loginTabBtn" data-tab="login">Login</button>
+                        <button class="auth-tab" id="signupTabBtn" data-tab="signup">Sign Up</button>
                     </div>
 
                     <!-- Login Form -->
-                    <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+                    <form class="auth-form active" id="loginForm">
                         <h2 style="margin-bottom: 1.5rem;">Login to Your Account</h2>
                         
                         <div class="form-group">
@@ -112,13 +112,22 @@
                         <button type="submit" class="btn-auth">Login</button>
 
                         <div class="auth-footer">
-                            Don't have an account? <a href="#" onclick="switchAuthTab('signup')">Sign up</a>
+                            Don't have an account? <a href="#" class="auth-switch-link" data-tab="signup">Sign up</a>
                         </div>
                     </form>
 
                     <!-- Signup Form -->
-                    <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
+                    <form class="auth-form" id="signupForm">
                         <h2 style="margin-bottom: 1.5rem;">Create Your Account</h2>
+                        
+                        <div class="form-group">
+                            <label for="signupRole">I am a</label>
+                            <select id="signupRole" required>
+                                <option value="">Select Role</option>
+                                <option value="customer">Customer</option>
+                                <option value="rider">Delivery Rider</option>
+                            </select>
+                        </div>
                         
                         <div class="form-group">
                             <label for="signupName">Full Name</label>
@@ -140,6 +149,16 @@
                             <input type="text" id="signupAddress" placeholder="Your address in Offa" required>
                         </div>
 
+                        <div class="form-group" id="vehicleField" style="display:none;">
+                            <label for="signupVehicle">Vehicle Type</label>
+                            <select id="signupVehicle">
+                                <option value="">Select Vehicle</option>
+                                <option value="motorcycle">Motorcycle</option>
+                                <option value="car">Car</option>
+                                <option value="van">Van</option>
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="signupPassword">Password</label>
                             <input type="password" id="signupPassword" placeholder="Create a password" required>
@@ -153,7 +172,7 @@
                         <button type="submit" class="btn-auth">Create Account</button>
 
                         <div class="auth-footer">
-                            Already have an account? <a href="#" onclick="switchAuthTab('login')">Login</a>
+                            Already have an account? <a href="#" class="auth-switch-link" data-tab="login">Login</a>
                         </div>
                     </form>
                 </div>
@@ -169,7 +188,7 @@
                 <div class="dashboard-user">
                     <div class="user-avatar" id="userAvatar">U</div>
                     <span id="userName">User</span>
-                    <button class="btn-logout" onclick="handleLogout()">Logout</button>
+                    <button class="btn-logout" id="dashboardLogoutBtn">Logout</button>
                 </div>
             </nav>
 
@@ -207,26 +226,26 @@
                 <div class="dashboard-section">
                     <div class="section-header">
                         <h2>Quick Actions</h2>
-                        <button class="btn-browse" onclick="showPage('browsePage')">Browse All Products</button>
+                        <button class="btn-browse" data-goto="browsePage">Browse All Products</button>
                     </div>
 
-                    <div class="quick-actions">
-                        <div class="action-card" onclick="showPage('browsePage')">
+                    <div class="quick-actions" id="dashboardQuickActions">
+                        <div class="action-card" data-goto="browsePage">
                             <div class="action-icon">🍲</div>
                             <h3>Order Food</h3>
                             <p>Nigerian dishes & fast food</p>
                         </div>
-                        <div class="action-card" onclick="showPage('browsePage')">
+                        <div class="action-card" data-goto="browsePage">
                             <div class="action-icon">🛒</div>
                             <h3>Groceries</h3>
                             <p>Fresh from Offa Market</p>
                         </div>
-                        <div class="action-card" onclick="showPage('browsePage')">
+                        <div class="action-card" data-goto="browsePage">
                             <div class="action-icon">📱</div>
                             <h3>Electronics</h3>
                             <p>Phones & accessories</p>
                         </div>
-                        <div class="action-card" onclick="showPage('browsePage')">
+                        <div class="action-card" data-goto="browsePage">
                             <div class="action-icon">💊</div>
                             <h3>Pharmacy</h3>
                             <p>Health & wellness</p>
@@ -244,7 +263,7 @@
                         <div class="empty-state">
                             <div class="empty-icon">📦</div>
                             <p>No orders yet. Start browsing products!</p>
-                            <button class="btn-browse" onclick="showPage('browsePage')" style="margin-top: 1rem;">Browse Products</button>
+                            <button class="btn-browse" data-goto="browsePage" style="margin-top: 1rem;">Browse Products</button>
                         </div>
                     </div>
                 </div>
@@ -258,11 +277,11 @@
             <nav>
                 <div class="logo">🚀 QuickDeliver</div>
                 <div class="nav-links">
-                    <a href="#" onclick="showPage('dashboardPage')">Dashboard</a>
+                    <a href="#" data-goto="dashboardPage">Dashboard</a>
                     <a href="#categories">Categories</a>
                     <a href="#products">Products</a>
                 </div>
-                <button class="cart-btn" onclick="toggleCart()">
+                <button class="cart-btn" id="openCartBtn">
                     🛒 Cart
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
@@ -274,7 +293,7 @@
             <p>From Nigerian food to groceries to electronics - delivered to your doorstep fast</p>
             <div class="search-bar">
                 <input type="text" placeholder="Search for jollof rice, amala, groceries..." id="searchInput">
-                <button onclick="searchProducts()">Search</button>
+                <button id="searchBtn">Search</button>
             </div>
         </section>
 
@@ -292,7 +311,7 @@
         <div class="cart-sidebar" id="cartSidebar">
             <div class="cart-header">
                 <h2>Your Cart</h2>
-                <button class="close-cart" onclick="toggleCart()">&times;</button>
+                <button class="close-cart" id="closeCartBtn">&times;</button>
             </div>
             <div class="cart-items" id="cartItems"></div>
             <div class="cart-footer">
@@ -300,7 +319,7 @@
                     <span>Total:</span>
                     <span id="cartTotal">₦0</span>
                 </div>
-                <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
+                <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
             </div>
         </div>
 
@@ -313,7 +332,7 @@
                         <p>Complete your order details</p>
                     </div>
 
-                    <form onsubmit="submitOrder(event)">
+                    <form id="checkoutOrderForm">
                         <div class="form-section">
                             <h3>Delivery Information</h3>
                             <div class="form-row">
@@ -399,7 +418,7 @@
                         </div>
 
                         <div class="button-group">
-                            <button type="button" class="btn btn-cancel" onclick="closeCheckout()">Cancel</button>
+                            <button type="button" class="btn btn-cancel" id="checkoutCancelBtn">Cancel</button>
                             <button type="submit" class="btn btn-submit">Place Order</button>
                         </div>
                     </form>
@@ -412,13 +431,151 @@
                         <p>Thank you for your order</p>
                         <div class="order-number">Order #<span id="orderNumber"></span></div>
                         <p>You will receive a confirmation SMS shortly.</p>
-                        <button class="btn btn-submit" onclick="closeSuccessMessage()">Continue Shopping</button>
+                        <button class="btn btn-submit" id="continueShoppingBtn">Continue Shopping</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Rider Dashboard Page -->
+    <div class="page" id="riderPage">
+        <div class="dashboard-page">
+            <nav class="dashboard-nav">
+                <div class="dashboard-logo">🚀 QuickDeliver - Rider</div>
+                <div class="dashboard-user">
+                    <div class="user-avatar" id="riderAvatar">R</div>
+                    <span id="riderName">Rider</span>
+                    <button class="btn-logout" id="riderLogoutBtn">Logout</button>
+                </div>
+            </nav>
+
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <h1>Delivery Dashboard 🚚</h1>
+                    <p>Manage your deliveries and earnings</p>
+                </div>
+
+                <!-- Earnings Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-value" id="totalEarnings">₦0</div>
+                        <div class="stat-label">Total Earnings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-value" id="totalDeliveries">0</div>
+                        <div class="stat-label">Total Deliveries</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-value" id="activeDeliveries">0</div>
+                        <div class="stat-label">Active Deliveries</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value" id="riderRating">4.8</div>
+                        <div class="stat-label">Your Rating</div>
+                    </div>
+                </div>
+
+                <!-- Available Orders -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Available Orders</h2>
+                    </div>
+                    <div id="availableOrdersList"></div>
+                </div>
+
+                <!-- Active Deliveries -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Active Deliveries</h2>
+                    </div>
+                    <div id="activeDeliveriesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Page -->
+    <div class="page" id="adminPage">
+        <div class="dashboard-page">
+            <nav class="dashboard-nav">
+                <div class="dashboard-logo">🚀 QuickDeliver - Admin</div>
+                <div class="dashboard-user">
+                    <div class="user-avatar" id="adminAvatar">A</div>
+                    <span id="adminName">Admin</span>
+                    <button class="btn-logout" id="adminLogoutBtn">Logout</button>
+                </div>
+            </nav>
+
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <h1>Admin Dashboard 📊</h1>
+                    <p>Manage platform, users, and operations</p>
+                </div>
+
+                <!-- Admin Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🚴</div>
+                        <div class="stat-value" id="totalRiders">0</div>
+                        <div class="stat-label">Active Riders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-value" id="adminTotalOrders">0</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-value" id="totalRevenue">₦0</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                </div>
+
+                <!-- Admin Menu -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Management Tools</h2>
+                    </div>
+                    <div class="quick-actions" id="adminQuickActions">
+                        <div class="action-card" data-section="users">
+                            <div class="action-icon">👥</div>
+                            <h3>Manage Users</h3>
+                            <p>View and manage customers</p>
+                        </div>
+                        <div class="action-card" data-section="riders">
+                            <div class="action-icon">🚴</div>
+                            <h3>Manage Riders</h3>
+                            <p>Approve and manage riders</p>
+                        </div>
+                        <div class="action-card" data-section="orders">
+                            <div class="action-icon">📦</div>
+                            <h3>Manage Orders</h3>
+                            <p>Track and manage all orders</p>
+                        </div>
+                        <div class="action-card" data-section="payments">
+                            <div class="action-icon">💳</div>
+                            <h3>Manage Payments</h3>
+                            <p>View payments and transactions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Content Sections -->
+                <div class="dashboard-section" id="adminContent"></div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Notification -->
     <div class="notification" id="notification"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
